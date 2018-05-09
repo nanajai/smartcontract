@@ -24,7 +24,7 @@ contract MyToken is ERC20Interface {
 
     uint256 private _totalSupply = 0;
 
-    string constant public name = "jan266"; // TODO CHANGE THIS!
+    string constant public name = "jan266";
 
     function deposit() payable {
         // check that deposit doesn't overflow total_supply
@@ -45,17 +45,29 @@ contract MyToken is ERC20Interface {
     function withdraw(uint256 _num_tokens) returns (bool success) {
 
         // Placeholder for (1)
-
         // Make sure the user's balance is sufficient
         // (otherwise throw)
+        assert(_accountBalances[msg.sender] >= _num_tokens);
 
         // Adjust data structures appropriately
+        _accountBalances[msg.sender] -= _num_tokens;
+        _totalSupply -= _num_tokens;
+
 
         // Send appropriate amount of Ether from contract's reserves
         // (throw if send fails)
+        uint wei_returned = _num_tokens * 1000;
 
-
+        if(wei_returned != 0){
+          if(msg.sender.send(wei_returned) == false){
+            throw;
+          }
+        }
+        
         // Issue log of transfer to 0x0 (represents burning of tokens in spec)
+        Transfer(msg.sender, 0x0, _num_tokens);
+
+        return true;
     }
 
     function totalSupply() constant returns (uint256 total_supply) {
