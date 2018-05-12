@@ -1,3 +1,27 @@
+Question 1
+Contract Address : 0x0270536FC2d2a976b88ff7311DCc62CEa17a6021
+
+Question 2
+Monster jan266 address : 0xb86e0ebcfa698bbde7e8266128b2c3a28a7a4aba
+
+
+Question 3.1
+
+Rafaels Secret key is 9da903e2bfc87d33b02afc4eca54920fe524309fa468772a.
+
+This was done by converting the hex value into binary and grabbing the last bit from the signature and appending it to the front of the secret key.
+
+Question 3.2
+
+The back door relies on the ordering of transactions to retrieve the secret key. The source of truth for the ordering is transaction ordering in the block. However, consider a scenario in which a user Alice, sends two back to back transactions. She attaches a higher mining fee to the second of the two transactions which means it is likely to be picked up first by the miners. This means that the ordering of transactions on the chain will be different than expected when the wallet code was running.
+
+In order to fix this, the wallet provider could enforce a timing delay between transactions being sent out in order to ensure the user has too wait at least one block confirmation before sending out another transactions. This would lead to each user having a unique block per transaction and prevent this ordering problem to a degree. This could be made more accurate by fixing a specific mining fee and forcing the user to utilize one common mining fee for every transaction.
+
+Question 3.3
+
+The most direct way to reduce the number of transactions required to recreate the signature would be to modify the scheme slightly and allow for more than one bit to be extracted per transaction. This means that each transactions signature' last TWO significant bits would be appended to the front TWO bits of the secret key when regenerating it. This means we would need 96 transactions to recreate a 192 bit secret key. We can also increase the number of bits retrieved per transaction to recreate with even fewer transactions.  
+
+
 Question 4.
 
 A bitcoin tumbler service is utilised to delink transactions from a particular input address. The purpose is to anonymise senders and receivers of
